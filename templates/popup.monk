@@ -1,0 +1,62 @@
+
+<div id="err">{{error}}</div>
+
+{% if is_loading && !error %}
+<button class="right" id="stop">Stop Inspector</button>
+<div class="loading">Loading...</div>
+{% endif %}
+
+{% if !is_loading %}
+<table id="maintable">
+<thead>
+    <tr class="center">
+        <td></td>
+        <td class="head" colspan="2">Transferred</td>
+        <td class="head cac" colspan="2">Cached</td>
+<!--         <td colspan="2">Total</td> -->
+    </tr>
+    <tr class="center">
+        <td></td>
+        <td class="">Requests</td>
+        <td class="">Bytes</td>
+        <td class="cac">Requests</td>
+            <td class="cac">Bytes<br/>Uncompressed</td>
+<!--         <td class="">Requests</td> -->
+<!--         <td class="">Bytes</td> -->
+    </tr>
+</thead>
+<tbody id="files">
+    <tr class="total"><td>Page Total - {{loadtime}} secs</td>
+        <td>{{total.reqtransf || ''}}</td>
+        <td>{{total.kbtransf|size}}</td>
+        <td class="cac">{{total.reqcached || ''}}</td>
+        <td class="cac">{{total.kbcached|size}}</td>
+<!--         <td class="r">{{total.reqtotal || '0'}}</td> -->
+<!--         <td>{{total.kbtotal|size}}</td> -->
+    </tr>
+
+    <typesection reqlist={{sections.Document}} counts={{sections.Documentcount}} title="HTML" cls="h HTML" />
+
+    <typesection reqlist={{sections.Script}} counts={{sections.Scriptcount}} title="JS" cls="h JS" />
+
+    <typesection reqlist={{sections.Stylesheet}} counts={{sections.Stylesheetcount}} title="CSS" cls="h CSS" />
+
+    <typesection reqlist={{sections.Image}} counts={{sections.Imagecount}} title="Images" cls="h" />
+
+    <typesection reqlist={{sections.XHR}} counts={{sections.XHRcount}} title="Ajax" cls="h" />
+
+    <typesection reqlist={{sections.Font}} counts={{sections.Fontcount}} title="Fonts" cls="h" />
+
+    <typesection reqlist={{sections.Other}} counts={{sections.Othercount}} title="Other" cls="h" />
+</tbody>
+</table>
+
+<div class="footer">
+<button class="right" id="stop">Stop Inspector</button>
+<label><input id="disablecache" type="checkbox"
+       checked={{ is_cache_disabled ? 'checked' : '' }} /> Disable cache</label>
+<a href="#" id="copy2clipboard">Copy report to clipboard</a>
+</div>
+
+{% endif %}
+

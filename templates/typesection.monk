@@ -1,0 +1,20 @@
+<tr class="mid">
+<td>{{title}}</td>
+<td>{{counts.reqtransf || ''}}</td>
+<td>{{counts.kbtransf|size}}</td>
+<td class="xcac">{{counts.reqcached || ''}}</td>
+<td class="xcac">{{counts.kbcached|size}}</td>
+<!-- <td>{{counts.reqtotal || ''}}</td> -->
+<!-- <td class="r">{{counts.kbtotal|size}}</td> -->
+</tr>
+
+{% for row of reqlist %}
+<tr class="{{row.cached ? ' cached ' : ''}} {{cls}} ">
+    <td>{{row.code != 200 ? row.code || '' : '' }}
+   &nbsp; {{row.type ? row.type :''}}
+   &nbsp; <a href="{{row.url ? row.url : '#'}}" target="{{row.url ? '_blank' : ''}}"> {% unsafe row.url_display %}</a></td>
+   <td></td><td class="">{{row.size|size}}</td>
+   <td class="xcac"></td><td class="xcac">{{row.sizecache|size}} </td>
+</tr>
+{% endfor %}
+

@@ -1,0 +1,142 @@
+
+html {
+    background: #ffffff;
+    min-width: 300px;
+}
+
+body {
+/*    width: 500px;*/
+    margin: 10px;
+    padding: 0px 4px;
+    /* background: #ccc; */
+    color: #fff;
+    margin: 10px auto;
+    /*    width: 700px;*/
+    font-family: sans-serif;
+    min-height: 50px;
+/*    user-select: none;*/
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* box-shadow: 2px 2px 7px #c2c2c2; */
+}
+
+td {
+    margin: 5px;
+    padding: 3px 8px;
+    text-align: right;
+    white-space: nowrap;
+    color: #7d7d7d;
+}
+td:first-child {
+    text-align: left;
+}
+
+tr.total td {
+    font-weight: bold;
+    font-size: 120%;
+    /* border-bottom: 4px solid #333; */
+    background: #B9C9FE;
+    padding: 8px 7px;
+    text-shadow: 0 1px 1px #fff;
+    color: #039;
+}
+tr.total td.cac {/* background: #d1dbff; */}
+
+tr.mid td {
+    font-weight: bold;
+    font-size: 100%;
+    cursor: pointer;
+    color: #339;
+    background: #E8EDFF;
+    border-bottom: 1px solid #fff;
+    /* text-shadow: 0px 1px 1px #ffffff; */
+}
+tr.cached td {
+    /* color: #333; */
+    background: #ffffe2;
+}
+tr.cached td a {
+    /* color: #00a; */
+}
+
+tr.center td {
+    text-align: center;
+    /* font-size: 90%; */
+}
+tr.h {
+    display: none;
+}
+tr.show {
+    display: table-row;
+}
+tr.h:hover td {
+    background: #f1f1f1 !important;
+}
+tr.mid:hover td {
+    background: #d6dfff !important;
+}
+
+thead td {
+    font-size: 110%;
+    color: #3a3b4f;
+    padding: 2px 3px;
+}
+td.cac {
+    background: #ffffe6;
+    /* border-left: 1px dotted #a4a4b8; */
+}
+td.head {
+    font-weight: bold;
+}
+tr.mid td.cac {
+    background: #eceff7;
+}
+a {
+    outline: none;
+    text-decoration: none;
+    color: #7d7d7d;
+}
+
+label:hover, a:hover {
+    text-decoration: underline;
+}
+
+label {
+    cursor: pointer;
+    margin-right: 20px;
+    color: #8686af;
+}
+button {
+    cursor: pointer;
+}
+
+#err, .red {
+    color: red;
+}
+
+.right {
+    float: right;
+}
+
+.footer {
+    margin-top: 5px;
+    padding: 5px;
+    background: #ffffff;
+    /*    text-align: right;*/
+}
+.footer a {
+    color: #8686af;
+}
+
+#stop {
+    margin-left: 10px;
+}
+
+.loading {
+    color: #8a8a8a;
+    margin: 5px;
+}
+
