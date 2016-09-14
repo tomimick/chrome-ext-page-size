@@ -2,7 +2,7 @@
 <div id="err">{{error}}</div>
 
 {% if is_loading && !error %}
-<button class="right" id="stop">Stop Inspector</button>
+<button class="right" id="stop" tabindex="-1">Stop Inspector</button>
 <div class="loading">Loading...</div>
 {% endif %}
 
@@ -52,7 +52,7 @@
 </table>
 
 <div class="footer">
-<button class="right" id="stop">Stop Inspector</button>
+<button class="right" id="stop" tabindex="-1">Stop Inspector</button>
 <label><input id="disablecache" type="checkbox"
        checked={{ is_cache_disabled ? 'checked' : '' }} /> Disable cache</label>
 <a href="#" id="copy2clipboard">Copy report to clipboard</a>
