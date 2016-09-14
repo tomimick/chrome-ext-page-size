@@ -31,6 +31,8 @@ function init() {
     } else {
         bgpage = chrome.extension.getBackgroundPage();
 
+        chrome.runtime.onMessage.addListener(on_message);
+
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             var active = tabs[0];
             tabid = active.id;
@@ -39,15 +41,20 @@ function init() {
             // start debugger or open popup
             var state = bgpage.getState(tabid);
             if (state.is_debugger_on) {
-                build_popup(bgpage.get_tab_network_requests(tabid),
-                    tab_url, bgpage.getState(tabid));
+                if (!state.is_loading) {
+                    // build the popup
+                    build_popup(bgpage.get_tab_network_requests(tabid),
+                        tab_url, bgpage.getState(tabid));
+                } else {
+                    // bg page will call us later
+                    viewupdate({ is_loading:true, error:"" });
+                }
             } else {
                 if (bgpage.startDebugger(tabid))
                     reload(tabid, false);
             }
         });
 
-        chrome.runtime.onMessage.addListener(on_message);
     }
 
     // click handlers - delegation
@@ -216,7 +223,7 @@ function get_counters(o, name) {
 
 // update UI
 function viewupdate(data) {
-    deb("update", data);
+//    deb("update", data);
     mainview.update(data);
 }
 

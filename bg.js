@@ -6,6 +6,7 @@
 // current tab being inspected
 var gtabid = 0;
 
+var is_loading = false;
 var is_cache_disabled = false;
 
 // map of tabid -> requests
@@ -35,6 +36,8 @@ chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
         // main frame loaded
         deb("onStart");
 
+        is_loading = true;
+
         clear_tab_data(details.tabId);
 
         // remember time
@@ -48,6 +51,8 @@ chrome.webNavigation.onCompleted.addListener(function(details) {
 
     if (details.frameId === 0 && details.tabId == gtabid) {
         deb("onCompleted");
+
+        is_loading = false;
 
         chrome.runtime.sendMessage({load_completed: 1});
 
@@ -116,7 +121,7 @@ function add_file(tabid, reqid, url, code, from_cache, type) {
 
     var urlpart = url.split("/").pop();
 
-    deb("add", reqid, urlpart, "cached:", from_cache);
+//    deb("add", reqid, urlpart, "cached:", from_cache);
 
     var obj = get_item(tabid, reqid);
 
@@ -247,7 +252,8 @@ function navigate(tabid, url) {
 
 function getState(tabid) {
     var r = {"is_debugger_on": gtabid==tabid,
-            "is_cache_disabled":is_cache_disabled};
+            "is_cache_disabled":is_cache_disabled,
+            "is_loading":is_loading};
 //    deb("state", tabid, gtabid, r);
     return r;
 }
@@ -339,6 +345,5 @@ function err(msg) {
 }
 deb = console.debug;
 
-
-console.log('inspector loaded');
+deb('inspector loaded');
 
