@@ -10,6 +10,9 @@ var tab_url;
 // monkberry view
 var mainview;
 
+// table items, remembered for reporting
+var table_data;
+
 // an extension or testing popup as normal page?
 var is_testing = false;
 
@@ -75,7 +78,7 @@ function init() {
             reload(tabid, targ.checked);
         } else if (targ.id === 'copy2clipboard') {
             // copy report to clipboard
-            copy_report_clipboard();
+            copy2clipboard(build_report_txt());
             event.preventDefault();
         } else if (is_child_of(targ, "mid")) {
             // toggle rows visibility
@@ -105,8 +108,6 @@ function on_message(request, sender, sendResponse) {
 //        showErr("Devtools is active - please close it");
         showErr(request.attach_error);
     }
-
-    //sendResponse({frompopup: "goodbye"});
 }
 
 // reload page or navigate to url + update view
@@ -144,6 +145,8 @@ function build_popup(raw_data, url, state) {
     d.is_cache_disabled = state.is_cache_disabled;
 
     d.total = d.sections.total; // shortcut
+
+    table_data = d;
 
     viewupdate(d);
 }
@@ -232,30 +235,59 @@ function showErr(msg) {
     viewupdate({error: msg});
 }
 
-// copies report to clipboard
-function copy_report_clipboard() {
-    // this is too simple now, improve!
+// build an ascii report of table data
+function build_report_txt() {
 
-    // first show all rows
-    for (var elem of document.getElementsByClassName('h')) {
-        elem.classList.add("show");
+    var txt = [];
+    txt.push("Page Size Inspector Report\n");
+    txt.push("URL: "+ tab_url);
+    txt.push(Date().toString() + "\n");
+    txt.push(build_line("REQUEST", "REQ", "BYTES", "CACHEREQ", "CACHEBYTES"));
+
+    // total
+    var t = table_data.sections.total;
+    txt.push("\n"+build_line("TOTAL", t.reqtransf, t.kbtransf,
+                t.reqcached, t.kbcached, "_"));
+
+    // sections
+    var sections = ["Document", "Script", "Stylesheet", "Image", "XHR",
+                    "Font", "Other"];
+    const MAX_URL = 45;
+    for (const sname of sections) {
+        var num = table_data.sections[sname+"count"] || {};
+        txt.push("\n"+build_line(sname, num.reqtransf, num.kbtransf,
+                 num.reqcached, num.kbcached, "_"));
+
+        var sect = table_data.sections[sname] || [];
+        for (const req of sect) {
+            var prefix = req.size ? '-' : '+';
+            var code = req.code != 200 ? req.code + ' ' : '';
+            var url = sanitize_url(req.url, MAX_URL, true) || req.url_display;
+            url = prefix + code + url;
+
+            txt.push(build_line(url, 0, req.size, 0, req.sizecache));
+        }
     }
 
-    // build text
-    var txt = getelem("maintable").innerText;
+    txt.push("");
 
-    var head = "Page Size Inspector report\n"
-    head += Date().toString() + "\n";
-    head += tab_url + "\n\n";
+    var s = txt.join("\n");
+//    deb(s);
+    return s;
+}
 
-    txt = head + txt;
+// build single report line, 5 columns
+// max line width 80
+function build_line(name, n1, n2, n3, n4, sepa) {
 
-    // copy
-    copy2clipboard(txt);
+    if (!sepa) sepa = ' ';
+    if (n2) n2 = numberWithCommas(n2);
+    if (n4) n4 = numberWithCommas(n4);
 
-    // hide all rows
-    for (var elem of document.getElementsByClassName('h')) {
-        elem.classList.remove("show");
-    }
+    return pad(sepa.repeat(46), name, false) +
+        pad(sepa.repeat(3),  n1 || '', true) +
+        pad(sepa.repeat(10), n2 || '', true) +
+        pad(sepa.repeat(9),  n3 || '', true) +
+        pad(sepa.repeat(11), n4 || '', true);
 }
 

@@ -28,6 +28,8 @@ function copy2clipboard(txt) {
 
 // removes http/s prefixes
 function remove_url_prefix(url) {
+    if (!url)
+        return url;
     if (url.startsWith("http://"))
         url = url.substr(7);
     else if (url.startsWith("https://"))
@@ -37,8 +39,11 @@ function remove_url_prefix(url) {
 
 
 // truncates and emphasizes the file name part of the url
-function sanitize_url(url) {
-    const MAX_LEN = 50;
+function sanitize_url(url, maxlen, no_bold) {
+    const MAX_LEN = maxlen || 50;
+
+    if (!url)
+        return url;
 
     if (url.startsWith("data:"))
         return url.substr(0, MAX_LEN);
@@ -63,7 +68,10 @@ function sanitize_url(url) {
     else
         part2 = part2.substr(0, rest) + ".../";
 
-    return part1 + part2 + "<b>" + fname + "</b>";
+    if (no_bold)
+        return part1 + part2 + fname;
+    else
+        return part1 + part2 + "<b>" + fname + "</b>";
 }
 
 // returns next siblings of dom elem that have classname
@@ -89,6 +97,17 @@ function is_child_of(elem, parent_class) {
             return elem;
 
         elem = elem.parentNode;
+    }
+}
+
+// http://stackoverflow.com/questions/2686855/is-there-a-javascript-function-that-can-pad-a-string-to-get-to-a-determined-leng
+function pad(pad, str, padLeft) {
+    if (typeof str === 'undefined')
+        return pad;
+    if (padLeft) {
+        return (pad + str).slice(-pad.length);
+    } else {
+        return (str + pad).substring(0, pad.length);
     }
 }
 
