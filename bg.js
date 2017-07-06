@@ -12,6 +12,8 @@ var is_cache_disabled = false;
 // map of tabid -> requests
 var netList = {};
 
+// list of requestIds that were cached
+var cachedList = {};
 
 //--------------------------------------------------------------------------
 // chrome events
@@ -91,10 +93,12 @@ function tab_updated(tabid) {
 
 // remove all network requests of this tab
 function clear_tab_data(tabid) {
-    deb("cleared "+tabid);
+//    deb("cleared "+tabid);
 
     delete netList[tabid+"list"];
     delete netList[tabid];
+
+    cachedList = {};
 }
 
 // add or get a single request item from list
@@ -120,6 +124,10 @@ function add_file(tabid, reqid, url, code, from_cache, type) {
         return;
 
     var urlpart = url.split("/").pop();
+
+    // is request cached even though from_cache = false!?
+    if (cachedList[reqid])
+        from_cache = true;
 
 //    deb("add", reqid, urlpart, "cached:", from_cache);
 
@@ -294,6 +302,9 @@ function onNetworkEvent(debuggeeId, message, params) {
         var resp = params.response;
         var reqid = params.requestId;
         // resp.encodedDataLength -1!
+
+        // resp.fromDiskCache may be false even though came from cache!
+        // A Chrome bug? Double check with Network.requestServedFromCache
         add_file(tabid, reqid, resp.url, resp.status, resp.fromDiskCache,
             params.type);
 
@@ -315,6 +326,12 @@ function onNetworkEvent(debuggeeId, message, params) {
                 console.debug("  BODY", size);
             });
         }*/
+
+    } else if (message == "Network.requestServedFromCache") {
+        // fired if request ended up loading from cache.
+        //deb("fromcache" + params.requestId);
+
+        cachedList[params.requestId] = 1;
 
     } else if (message == "Network.dataReceived") {
 //        console.debug("data", params);
