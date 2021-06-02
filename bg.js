@@ -20,6 +20,8 @@ var cachedList = {};
 
 // tab changed
 chrome.tabs.onActivated.addListener(function(info) {
+    // seems chrome.tabs.get always causes exception...
+    return;
     chrome.tabs.get(info.tabId, function(tab) {
         tab_updated(tab.id);
     });

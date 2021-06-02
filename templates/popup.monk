@@ -55,7 +55,6 @@
 <button class="right" id="stop" tabindex="-1">Stop Inspector</button>
 <label><input id="disablecache" type="checkbox"
        checked={{ is_cache_disabled ? 'checked' : '' }} /> Disable cache</label>
-<a href="#" id="copy2clipboard">Copy report to clipboard</a>
 </div>
 
 {% endif %}

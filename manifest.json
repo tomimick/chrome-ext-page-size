@@ -2,9 +2,9 @@
   "name": "Page Size Inspector",
   "short_name": "Page Size Inspector",
   "description": "Reports page size, cache usage, network requests, load time.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "permissions": [
-    "<all_urls>", "debugger", "webNavigation", "clipboardWrite"
+    "<all_urls>", "debugger", "webNavigation"
   ],
   "browser_action": {
       "default_title": "Page Size Inspector",
